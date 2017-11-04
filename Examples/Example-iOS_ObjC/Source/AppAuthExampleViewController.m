@@ -136,7 +136,7 @@ static NSString *const kAppAuthExampleAuthStateKey = @"authState";
 /*! @brief Refreshes UI, typically called after the auth state changed.
  */
 - (void)updateUI {
-  _userinfoButton.enabled = [_authState isAuthorized];
+//  _userinfoButton.enabled = [_authState isAuthorized]; -> B2C does not support userinfo endpoint
   _clearAuthStateButton.enabled = _authState != nil;
   _codeExchangeButton.enabled = _authState.lastAuthorizationResponse.authorizationCode
                                 && !_authState.lastTokenResponse;
@@ -368,11 +368,12 @@ static NSString *const kAppAuthExampleAuthStateKey = @"authState";
                                                             
                                                             [self logMessage:@"Got configuration: %@", configuration];
                                                             
-                                                            NSDictionary<NSString *, NSString *> *additionalParameters = @{ @"username" : @"demob2cuser@outlook.com",
-                                                                                                                            @"password" : @"",
-                                                                                                                            @"resource" : @"abc",
-                                                                                                                            @"response_type" : @"token id_token"
-                                                                                                                            };
+                                                            NSDictionary<NSString *, NSString *> *additionalParameters = @{
+                                                                                                                           @"username" : @"demob2cuser@outlook.com",
+                                                                                                                           @"password" : @"",
+                                                                                                                           @"resource" : @"abc",
+                                                                                                                           @"response_type" : @"token id_token"
+                                                                                                                           };
                                                             
                                                             OIDTokenRequest *tokenExchangeRequest = [[OIDTokenRequest alloc] initWithConfiguration:configuration
                                                                                                                                          grantType:OIDGrantTypePassword
@@ -397,7 +398,9 @@ static NSString *const kAppAuthExampleAuthStateKey = @"authState";
                                                                                                         [self logMessage:@"Received token response with accessToken: %@", tokenResponse.accessToken];
                                                                                                     }
                                                                                                     
-                                                                                                    [_authState updateWithTokenResponse:tokenResponse error:error];
+                                                                                                    OIDAuthState *authState = [[OIDAuthState alloc] initWithAuthorizationResponse:nil tokenResponse:tokenResponse];
+                                                                                                    
+                                                                                                    [self setAuthState:authState];
                                                                                                 }];
                                                         }];
 
@@ -526,3 +529,4 @@ static NSString *const kAppAuthExampleAuthStateKey = @"authState";
 }
 
 @end
+
