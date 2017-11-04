@@ -342,6 +342,7 @@ static NSString *const kAppAuthExampleAuthStateKey = @"authState";
   [OIDAuthorizationService performTokenRequest:tokenExchangeRequest
                                       callback:^(OIDTokenResponse *_Nullable tokenResponse,
                                                  NSError *_Nullable error) {
+
     if (!tokenResponse) {
       [self logMessage:@"Token exchange error: %@", [error localizedDescription]];
     } else {
