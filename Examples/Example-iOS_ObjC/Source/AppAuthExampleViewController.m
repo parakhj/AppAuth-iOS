@@ -357,7 +357,7 @@ static NSString *const kAppAuthExampleAuthStateKey = @"authState";
     NSURL *issuer = [NSURL URLWithString:kIssuerROPC];
     NSURL *redirectURI = [NSURL URLWithString:kRedirectURI];
     
-    // discovers endpoints
+    // discovers endpoints and makes request to token endpoint
     [OIDAuthorizationService discoverServiceConfigurationForIssuer:issuer
                                                         completion:^(OIDServiceConfiguration *_Nullable configuration, NSError *_Nullable error) {
                                                             
@@ -368,15 +368,14 @@ static NSString *const kAppAuthExampleAuthStateKey = @"authState";
                                                             
                                                             [self logMessage:@"Got configuration: %@", configuration];
                                                             
-                                                            NSDictionary<NSString *, NSString *> *additionalParameters =
-                                                            @{ @"username" : @"demob2cuser@outlook.com",
-                                                               @"password" : @"",
-                                                               @"resource" : @"abc",
-                                                               @"response_type" : @"token id_token"
-                                                               };
+                                                            NSDictionary<NSString *, NSString *> *additionalParameters = @{ @"username" : @"demob2cuser@outlook.com",
+                                                                                                                            @"password" : @"",
+                                                                                                                            @"resource" : @"abc",
+                                                                                                                            @"response_type" : @"token id_token"
+                                                                                                                            };
                                                             
                                                             OIDTokenRequest *tokenExchangeRequest = [[OIDTokenRequest alloc] initWithConfiguration:configuration
-                                                                                                            grantType:OIDGrantTypePassword
+                                                                                                                                         grantType:OIDGrantTypePassword
                                                                                                                                  authorizationCode:nil
                                                                                                                                        redirectURL:redirectURI
                                                                                                                                           clientID:kClientID
@@ -387,7 +386,7 @@ static NSString *const kAppAuthExampleAuthStateKey = @"authState";
                                                                                                                               additionalParameters:additionalParameters];
                                                             
                                                             [self logMessage:@"Performing ROPC with request [%@]", tokenExchangeRequest];
-    
+                                                            
                                                             [OIDAuthorizationService performTokenRequest:tokenExchangeRequest
                                                                                                 callback:^(OIDTokenResponse *_Nullable tokenResponse,
                                                                                                            NSError *_Nullable error) {
