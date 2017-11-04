@@ -136,7 +136,7 @@ static NSString *const kAppAuthExampleAuthStateKey = @"authState";
 /*! @brief Refreshes UI, typically called after the auth state changed.
  */
 - (void)updateUI {
-//  _userinfoButton.enabled = [_authState isAuthorized]; -> B2C does not support userinfo endpoint
+  _userinfoButton.enabled = [_authState isAuthorized];
   _clearAuthStateButton.enabled = _authState != nil;
   _codeExchangeButton.enabled = _authState.lastAuthorizationResponse.authorizationCode
                                 && !_authState.lastTokenResponse;
