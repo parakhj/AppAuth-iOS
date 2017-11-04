@@ -28,20 +28,24 @@ typedef void (^PostRegistrationCallback)(OIDServiceConfiguration *configuration,
 
 /*! @brief The OIDC issuer from which the configuration will be discovered.
  */
-static NSString *const kIssuer = @"https://issuer.example.com";
+static NSString *const kIssuer = @"https://login.microsoftonline.com/tfp/potterworld.onmicrosoft.com/B2C_1_susi/v2.0";
+
+/*! @brief The OIDC issuer from which the configuration will be discovered to do ROPC.
+ */
+static NSString *const kIssuerROPC = @"https://login.microsoftonline.com/tfp/potterworld.onmicrosoft.com/B2C_1A_ResourceOwner";
 
 /*! @brief The OAuth client ID.
     @discussion For client configuration instructions, see the README.
         Set to nil to use dynamic registration with this example.
     @see https://github.com/openid/AppAuth-iOS/blob/master/Examples/Example-iOS_ObjC/README.md
  */
-static NSString *const kClientID = @"YOUR_CLIENT_ID";
+static NSString *const kClientID = @"b35a3d9b-cf71-45ab-bbc7-8a239b9c181b";
 
 /*! @brief The OAuth redirect URI for the client @c kClientID.
     @discussion For client configuration instructions, see the README.
     @see https://github.com/openid/AppAuth-iOS/blob/master/Examples/Example-iOS_ObjC/README.md
  */
-static NSString *const kRedirectURI = @"com.example.app:/oauth2redirect/example-provider";
+static NSString *const kRedirectURI = @"msalb35a3d9b://oauth/redirect";
 
 /*! @brief NSCoding key for the authState property.
  */
@@ -349,6 +353,60 @@ static NSString *const kAppAuthExampleAuthStateKey = @"authState";
   }];
 }
 
+- (IBAction)ropcRequest:(nullable id)sender {
+    // Gets configuration
+    NSURL *issuer = [NSURL URLWithString:kIssuerROPC];
+    NSURL *redirectURI = [NSURL URLWithString:kRedirectURI];
+    
+    // discovers endpoints and makes request to token endpoint
+    [OIDAuthorizationService discoverServiceConfigurationForIssuer:issuer
+                                                        completion:^(OIDServiceConfiguration *_Nullable configuration, NSError *_Nullable error) {
+                                                            
+                                                            if (!configuration) {
+                                                                [self logMessage:@"Error retrieving discovery document: %@", [error localizedDescription]];
+                                                                return;
+                                                            }
+                                                            
+                                                            [self logMessage:@"Got configuration: %@", configuration];
+                                                            
+                                                            NSDictionary<NSString *, NSString *> *additionalParameters = @{
+                                                                                                                           @"username" : @"demob2cuser@outlook.com",
+                                                                                                                           @"password" : @"",
+                                                                                                                           @"resource" : @"abc",
+                                                                                                                           @"response_type" : @"token id_token"
+                                                                                                                           };
+                                                            
+                                                            OIDTokenRequest *tokenExchangeRequest = [[OIDTokenRequest alloc] initWithConfiguration:configuration
+                                                                                                                                         grantType:OIDGrantTypePassword
+                                                                                                                                 authorizationCode:nil
+                                                                                                                                       redirectURL:redirectURI
+                                                                                                                                          clientID:kClientID
+                                                                                                                                      clientSecret:nil
+                                                                                                                                             scope:@"openid"
+                                                                                                                                      refreshToken:nil
+                                                                                                                                      codeVerifier:nil
+                                                                                                                              additionalParameters:additionalParameters];
+                                                            
+                                                            [self logMessage:@"Performing ROPC with request [%@]", tokenExchangeRequest];
+                                                            
+                                                            [OIDAuthorizationService performTokenRequest:tokenExchangeRequest
+                                                                                                callback:^(OIDTokenResponse *_Nullable tokenResponse,
+                                                                                                           NSError *_Nullable error) {
+                                                                                                    
+                                                                                                    if (!tokenResponse) {
+                                                                                                        [self logMessage:@"Token request error: %@", [error localizedDescription]];
+                                                                                                    } else {
+                                                                                                        [self logMessage:@"Received token response with accessToken: %@", tokenResponse.accessToken];
+                                                                                                    }
+                                                                                                    
+                                                                                                    OIDAuthState *authState = [[OIDAuthState alloc] initWithAuthorizationResponse:nil tokenResponse:tokenResponse];
+                                                                                                    
+                                                                                                    [self setAuthState:authState];
+                                                                                                }];
+                                                        }];
+
+}
+
 - (IBAction)clearAuthState:(nullable id)sender {
   [self setAuthState:nil];
 }
@@ -472,3 +530,4 @@ static NSString *const kAppAuthExampleAuthStateKey = @"authState";
 }
 
 @end
+
