@@ -29,6 +29,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nullable) IBOutlet UIButton *authAutoButton;
 @property(nullable) IBOutlet UIButton *authManual;
 @property(nullable) IBOutlet UIButton *codeExchangeButton;
+@property(nullable) IBOutlet UIButton *ropcRequestButton;
 @property(nullable) IBOutlet UIButton *userinfoButton;
 @property(nullable) IBOutlet UIButton *clearAuthStateButton;
 @property(nullable) IBOutlet UITextView *logTextView;
@@ -53,6 +54,11 @@ NS_ASSUME_NONNULL_BEGIN
     @param sender IBAction sender.
  */
 - (IBAction)codeExchange:(nullable id)sender;
+
+/*! @brief Performs the an ROPC request to the token endpoint.
+ @param sender IBAction sender.
+ */
+- (IBAction)ropcRequest:(nullable id)sender;
 
 /*! @brief Performs a Userinfo API call using @c OIDAuthState.performActionWithFreshTokens.
     @param sender IBAction sender.

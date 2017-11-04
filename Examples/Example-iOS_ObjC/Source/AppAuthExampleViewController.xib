@@ -16,6 +16,7 @@
                 <outlet property="clearAuthStateButton" destination="pph-Jd-bi0" id="BhD-XD-CC4"/>
                 <outlet property="codeExchangeButton" destination="thC-Nv-mlY" id="tFT-mX-uxY"/>
                 <outlet property="logTextView" destination="EM1-NJ-NcX" id="XfR-G7-1ui"/>
+                <outlet property="ropcRequestButton" destination="m0L-a9-dR9" id="Sim-jt-j0b"/>
                 <outlet property="userinfoButton" destination="Hr5-4v-dy0" id="RWN-Ju-zcT"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
             </connections>
