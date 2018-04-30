@@ -374,7 +374,7 @@ static NSString *const kAppAuthExampleAuthStateKey = @"authState";
          @{
            @"username" : @"demob2cuser@outlook.com",
            @"password" : @"", // TODO: Add password
-           @"resource" : @"abc",
+           @"scope" : @"openid https://tenantName/apiName/scope",
            @"response_type" : @"token id_token"
            };
          
