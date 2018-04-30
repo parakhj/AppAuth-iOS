@@ -24,6 +24,16 @@ Follow the instructions below to configure the sample for your Azure AD B2C conf
 
 * Clone the code
 
+### Install the libary
+
+1. Open terminal, and navigate to `Examples/Example-iOS_ObjC/`folder.
+
+2. Run the following command to install the AppAuth pod.
+
+```
+pod install
+```
+
 ### Setting up the iOS App
 
 1. In Finder, navigate to `Examples/Example-iOS_ObjC/` and open `Example-iOS_ObjC.xcodeproj`. This will open the project in XCode.
@@ -40,9 +50,9 @@ Follow the instructions below to configure the sample for your Azure AD B2C conf
     * `password`: Insert the user's password here.
     * `scope`: The value for the scope parameter in the request.
 
-3. Open Info.pList.  Expand 'URL types' -> 'Item 0' -> 'URL Schemes' -> 'Item 0'.  Update the scheme 'msalb35a3d9b' to match the scheme of the kRedirectUri value updated in ViewController.m.
+4. Open Info.pList.  Expand 'URL types' -> 'Item 0' -> 'URL Schemes' -> 'Item 0'.  Update the scheme 'msalb35a3d9b' to match the scheme of the kRedirectUri value updated in ViewController.m.
 
-4. Go ahead and try the app. Upon completing the login process, you should see the types of tokens acquired.
+5. Go ahead and try the app. Upon completing the login process, you should see the types of tokens acquired.
 
 
 ## Questions & Issues
